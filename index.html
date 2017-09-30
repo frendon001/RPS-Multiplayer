@@ -15,6 +15,72 @@
 				<h1 class="page-title">Rock Paper Scissors</h1>
 			</div>
 		</header>
+		<!--INSTRUCTIONS-->
+		<div class="row justify-content-center" id="instructions">
+			<div class="col-lg-8">
+				<div class="introductions text-center">
+					<p class="instructions-text">Enter your name to pair up with another player.</p>
+					<input type="text" name="name" id="name">
+					<button class="btn btn-primary">Start</button>
+				</div>
+				<div class="active-game text-center">
+					<p class="instructions-text">Hi <span id="player-name"></span>! you are player <span id="player-num"></span></p>
+					<p class="instructions-text" id="display-text"></p>
+				</div>
+			</div>
+		</div>
+		<!--GAME AREA-->
+		<div class="row justify-content-center" id="game">
+			<div class="col-lg-3 text-center">
+				<div id="player-1 game-content">
+					<p id="player-1-name">Waiting for Player 1</p>
+					<p class="rock">Rock</p>
+					<p class="paper">Paper</p>
+					<p class="scissors">Scissors</p>
+
+					<p id="selection"></p>
+
+					<p>Wins:<span>0</span> Losses:<span>0</span></p>
+					
+				</div>
+			</div>
+			<div class="col-lg-3 text-center">
+				<div class="game-content"></div>
+			</div>
+			<div class="col-lg-3 text-center">
+				<div id="player-2 game-content">
+					<p id="player-2-name">Waiting for Player 2</p>
+					<p class="rock">Rock</p>
+					<p class="paper">Paper</p>
+					<p class="scissors">Scissors</p>
+
+					<p id="selection"></p>
+
+					<p>Wins:<span>0</span> Losses:<span>0</span></p>
+					
+				</div>
+			</div>
+		</div>
+		<!--CHAT-->
+		<div class="row justify-content-center" id="chat">
+			<div class="col-lg-8">
+				<div class="card">
+					<div class="card-header">
+						<h5 class="title">Chat with Your Opponent</h5>
+					</div>
+					<div class="card-body">
+						<div class="chat-window">
+						</div>
+						<form action="#">
+							<fieldset>
+								<input type="text" placeholder="Type your message…" autofocus>
+								<button class="btn">Send</button>
+							</fieldset>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 </body>
 <!--JS for Bootstrap and JQuery-->

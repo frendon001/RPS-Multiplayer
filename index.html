@@ -8,7 +8,7 @@
 </head>
 
 <body class="background-page">
-	<div class="container main-content">
+	<div class="container-fluid main-content">
 		<!--HEADER-->
 		<header class="row header-row justify-content-center">
 			<div class="col-md-8 text-center">
@@ -21,43 +21,43 @@
 				<div class="introductions text-center">
 					<p class="instructions-text">Enter your name to pair up with another player.</p>
 					<input type="text" name="name" id="name">
-					<button class="btn btn-primary">Start</button>
+					<button class="btn btn-primary" id="start-game">Start</button>
 				</div>
-				<div class="active-game text-center">
-					<p class="instructions-text">Hi <span id="player-name"></span>! you are player <span id="player-num"></span></p>
+				<div class="active-game text-center d-none" >
+					<p class="instructions-text">Hi <span id="player-name"></span>! You are player <span id="player-num"></span></p>
 					<p class="instructions-text" id="display-text"></p>
 				</div>
 			</div>
 		</div>
 		<!--GAME AREA-->
 		<div class="row justify-content-center" id="game">
-			<div class="col-lg-3 text-center">
-				<div id="player-1 game-content">
+			<div class="col-md-3 col-sm-4 text-center">
+				<div id="player-1" class="game-content">
 					<p id="player-1-name">Waiting for Player 1</p>
-					<p class="rock">Rock</p>
-					<p class="paper">Paper</p>
-					<p class="scissors">Scissors</p>
-
-					<p id="selection"></p>
-
-					<p>Wins:<span>0</span> Losses:<span>0</span></p>
+					<div id="player-1-options">
+						<p class="rock choice">Rock</p>
+						<p class="paper choice">Paper</p>
+						<p class="scissors choice">Scissors</p>
+					</div>
+					<p id="player-1-selection"></p>
+					<p>Wins:<span id="player-1-wins">0</span> Losses:<span id="player-1-losses">0</span></p>
+				</div>
+			</div>
+			<div class="col-md-3 col-sm-4 text-center">
+				<div class="game-content">
 					
 				</div>
 			</div>
-			<div class="col-lg-3 text-center">
-				<div class="game-content"></div>
-			</div>
-			<div class="col-lg-3 text-center">
-				<div id="player-2 game-content">
+			<div class="col-md-3 col-sm-4 text-center">
+				<div id="player-2" class="game-content">
 					<p id="player-2-name">Waiting for Player 2</p>
-					<p class="rock">Rock</p>
-					<p class="paper">Paper</p>
-					<p class="scissors">Scissors</p>
-
-					<p id="selection"></p>
-
-					<p>Wins:<span>0</span> Losses:<span>0</span></p>
-					
+					<div id="player-2-options">
+						<p class="rock choice">Rock</p>
+						<p class="paper choice">Paper</p>
+						<p class="scissors choice">Scissors</p>
+					</div>
+					<p id="player-2-selection"></p>
+					<p>Wins:<span id="player-2-wins">0</span> Losses:<span id="player-2-losses">0</span></p>
 				</div>
 			</div>
 		</div>
@@ -87,6 +87,8 @@
 <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+<!--JS for Firebase-->
+<script src="https://www.gstatic.com/firebasejs/4.4.0/firebase.js"></script>
 <script src="assets/javascript/app.js"></script>
 
 </html>

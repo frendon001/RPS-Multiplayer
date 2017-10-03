@@ -20,10 +20,12 @@
 			<div class="col-lg-8">
 				<div class="introductions text-center">
 					<p class="instructions-text">Enter your name to pair up with another player.</p>
-					<input type="text" name="name" id="name">
-					<button class="btn btn-primary" id="start-game">Start</button>
+					<form>
+						<input type="text" name="name" id="name">
+						<button class="btn btn-primary" id="start-game">Start</button>
+					</form>
 				</div>
-				<div class="active-game text-center d-none" >
+				<div class="active-game text-center d-none">
 					<p class="instructions-text">Hi <span id="player-name"></span>! You are player <span id="player-num"></span></p>
 					<p class="instructions-text" id="display-text"></p>
 				</div>
@@ -45,7 +47,6 @@
 			</div>
 			<div class="col-md-3 col-sm-4 text-center">
 				<div class="game-content" id="result">
-					
 				</div>
 			</div>
 			<div class="col-md-3 col-sm-4 text-center">
@@ -69,13 +70,11 @@
 						<h5 class="title">Chat with Your Opponent</h5>
 					</div>
 					<div class="card-body">
-						<div class="chat-window">
+						<div id="chat-window">
 						</div>
 						<form action="#">
-							<fieldset>
-								<input type="text" placeholder="Type your message…" autofocus>
-								<button class="btn">Send</button>
-							</fieldset>
+							<input type="text" placeholder="Type your message…" autofocus id="chat-msg">
+							<button class="btn" id="send-msg">Send</button>
 						</form>
 					</div>
 				</div>

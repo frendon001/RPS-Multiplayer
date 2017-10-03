@@ -9,9 +9,6 @@ var config = {
 };
 firebase.initializeApp(config);
 
-
-
-
 // Initial Values
 var totalPlayersNum = 0;
 var playerNumber = 0;
@@ -21,9 +18,7 @@ var rpsPlayer = {
 	losses: 0,
 	wins: 0,
 	choice: ""
-
 };
-var gameReady = false;
 
 // Create a variable to reference the database.
 var database = firebase.database();
@@ -33,10 +28,30 @@ var totalPlayersRef = database.ref("/players");
 var playerTurn = database.ref("/turn");
 var player1 = database.ref("/players/1");
 var player2 = database.ref("/players/2");
+var messages = database.ref("messages");
 
 // '.info/connected' is a boolean value, true if the client is connected and false if they are not.
 var connectedRef = database.ref(".info/connected");
 
+
+$("#send-msg").on("click", function() {
+	event.preventDefault();
+	var message = $("#chat-msg").val();
+	if (message != "") {
+		messages.push({
+			name: rpsPlayer.name + ":",
+			message: message
+		});
+	}
+
+	$("#chat-msg").val("");
+});
+
+messages.on('child_added', function(snapshot) {
+	//add message to chat window
+	$("#chat-window").append("<span>" + snapshot.val().name + " " + snapshot.val().message + "</span><br>");
+
+});
 
 
 totalPlayersRef.on('value', function(snapshot) {
@@ -83,69 +98,9 @@ totalPlayersRef.on('value', function(snapshot) {
 		$("#player-2-wins").text(updatedPlayer2.wins);
 		$("#player-2-losses").text(updatedPlayer2.losses);
 		$("#player-2-selection").text(updatedPlayer2.choice);
-
-
-
-
 	}
 
-
-
-
 });
-
-
-
-// player1.on("value", function(snapshot) {
-// 	if (snapshot.exists()) {
-// 		console.log(snapshot.val());
-// 		if (snapshot.val().name) {
-// 			$("#player-1-name").text(snapshot.val().name);
-// 			$("#player-1-wins").text(snapshot.val().wins);
-// 			$("#player-1-losses").text(snapshot.val().losses);
-// 		} else {
-// 			$("#player-1-name").text("Waiting for Player 1");
-// 			$("#player-1-wins").text(0);
-// 			$("#player-1-losses").text(0);
-// 		}
-// 	} else {
-
-// 		$("#player-1-name").text("Waiting for Player 1");
-// 		$("#player-1-wins").text(0);
-// 		$("#player-1-losses").text(0);
-// 		if (playerNumber === 1) {
-// 			$(".introductions").removeClass("d-none");
-// 			$(".active-game").addClass("d-none");
-// 		}
-// 	}
-
-// });
-
-// player2.on("value", function(snapshot) {
-// 	if (snapshot.exists()) {
-// 		console.log(snapshot.val());
-// 		if (snapshot.val().name) {
-// 			$("#player-2-name").text(snapshot.val().name);
-// 			$("#player-2-wins").text(snapshot.val().wins);
-// 			$("#player-2-losses").text(snapshot.val().losses);
-
-// 		} else {
-// 			$("#player-2-name").text("Waiting for Player 2");
-// 			$("#player-2-wins").text(0);
-// 			$("#player-2-losses").text(0);
-// 		}
-// 	} else {
-
-// 		$("#player-2-name").text("Waiting for Player 2");
-// 		$("#player-2-wins").text(0);
-// 		$("#player-2-losses").text(0);
-// 		if (playerNumber === 2) {
-// 			$(".introductions").removeClass("d-none");
-// 			$(".active-game").addClass("d-none");
-// 		}
-// 	}
-
-// });
 
 playerTurn.on("value", function(snapshot) {
 	//Check if player turn has a value
@@ -184,9 +139,6 @@ playerTurn.on("value", function(snapshot) {
 	}
 
 });
-
-
-
 
 
 //When the client's connection state changes...
@@ -229,8 +181,8 @@ function rpsWinner() {
 				player1Choice === "Scissors" && player2Choice === 'Paper') {
 				//Player 1 wins
 				$("#result").text(player1Name + " is the Winner!");
-				database.ref("/players/1/wins").set(snapshot.child('1').child('wins').val() +1);
-				database.ref("/players/2/losses").set(snapshot.child('2').child('losses').val() +1);
+				database.ref("/players/1/wins").set(snapshot.child('1').child('wins').val() + 1);
+				database.ref("/players/2/losses").set(snapshot.child('2').child('losses').val() + 1);
 			}
 
 			if (player1Choice === "Rock" && player2Choice === 'Paper' ||
@@ -238,14 +190,13 @@ function rpsWinner() {
 				player1Choice === "Scissors" && player2Choice === 'Rock') {
 				//Player 2 wins
 				$("#result").text(player2Name + " is the Winner!");
-				database.ref("/players/2/wins").set(snapshot.child('2').child('wins').val() +1);
-				database.ref("/players/1/losses").set(snapshot.child('1').child('losses').val() +1);
+				database.ref("/players/2/wins").set(snapshot.child('2').child('wins').val() + 1);
+				database.ref("/players/1/losses").set(snapshot.child('1').child('losses').val() + 1);
 			}
 		}
 
 	});
 };
-
 
 function assignPlayer(num, name) {
 	//changes to html based on which player entered their name
@@ -258,7 +209,6 @@ function assignPlayer(num, name) {
 
 };
 
-
 function setChoice(player, choice) {
 	//set choice to required player in database
 	if (player === 1) {
@@ -269,11 +219,8 @@ function setChoice(player, choice) {
 	}
 }
 
-
-
-
-
 $("#start-game").on("click", function(event) {
+	event.preventDefault();
 	//get input value for player name
 	rpsPlayer.name = $("#name").val().trim();
 	//makes sure name is not empty
@@ -294,6 +241,7 @@ $("#start-game").on("click", function(event) {
 				}
 
 			});
+		$("#name").val("");
 	}
 });
 

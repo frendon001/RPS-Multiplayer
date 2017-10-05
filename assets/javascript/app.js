@@ -106,6 +106,9 @@ function setChoice(player, choice) {
 messages.on('child_added', function(snapshot) {
 	//add message to chat window
 	$("#chat-window").append("<span>" + snapshot.val().name + " " + snapshot.val().message + "</span><br>");
+	//auto-scroll chat
+	var objDiv = document.getElementById("chat-window");
+	objDiv.scrollTop = objDiv.scrollHeight;
 
 });
 
@@ -257,9 +260,10 @@ $("#start-game").on("click", function(event) {
 $("#send-msg").on("click", function() {
 	event.preventDefault();
 	var message = $("#chat-msg").val();
+	var name = rpsPlayer.name ? rpsPlayer.name : "Anonymous";
 	if (message != "") {
 		messages.push({
-			name: rpsPlayer.name + ":",
+			name: name + ":",
 			message: message
 		});
 	}

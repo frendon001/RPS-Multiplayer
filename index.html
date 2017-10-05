@@ -17,7 +17,7 @@
 		</header>
 		<!--INSTRUCTIONS-->
 		<div class="row justify-content-center" id="instructions">
-			<div class="col-lg-8">
+			<div class="col-md-8">
 				<div class="introductions text-center">
 					<p class="instructions-text">Enter your name to pair up with another player.</p>
 					<form>
@@ -42,11 +42,12 @@
 						<p class="scissors choice">Scissors</p>
 					</div>
 					<p id="player-1-selection"></p>
-					<p>Wins:<span id="player-1-wins">0</span> Losses:<span id="player-1-losses">0</span></p>
+					<div class="score">Wins:<span id="player-1-wins">0</span> Losses:<span id="player-1-losses">0</span></div>
 				</div>
 			</div>
 			<div class="col-md-3 col-sm-4 text-center">
-				<div class="game-content" id="result">
+				<div class="game-content">
+					<p id="result"></p>
 				</div>
 			</div>
 			<div class="col-md-3 col-sm-4 text-center">
@@ -58,21 +59,23 @@
 						<p class="scissors choice">Scissors</p>
 					</div>
 					<p id="player-2-selection"></p>
-					<p>Wins:<span id="player-2-wins">0</span> Losses:<span id="player-2-losses">0</span></p>
+					<div class="score">Wins:<span id="player-2-wins">0</span> Losses:<span id="player-2-losses">0</span></div>
 				</div>
 			</div>
 		</div>
 		<!--CHAT-->
 		<div class="row justify-content-center" id="chat">
-			<div class="col-lg-8">
+			<div class="col-10 col-sm-10 col-md-8">
 				<div class="card">
 					<div class="card-header">
 						<h5 class="title">Chat with Your Opponent</h5>
 					</div>
 					<div class="card-body">
-						<div id="chat-window">
+						<div class="window">
+							<div id="chat-window">
+							</div>
 						</div>
-						<form action="#">
+						<form action="#" id="msg-form">
 							<input type="text" placeholder="Type your message…" autofocus id="chat-msg">
 							<button class="btn" id="send-msg">Send</button>
 						</form>

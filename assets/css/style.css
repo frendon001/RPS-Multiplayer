@@ -1,13 +1,88 @@
+p {
+	margin: 0px;
+}
+
+.background-page {
+	background: url("../images/paper.png") no-repeat center center fixed;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+}
+
+.score {
+	position: absolute;
+	bottom: 0;
+	text-align: center;
+	width: 100%;
+}
+
 #game {
 	margin: 25px 0px 25px 0px;
 }
 
 .game-content {
-
+	position: relative;
 	height: 200px;
-	width: 200px;
+	width: 175px;
 }
 
-/*#player-1-options,#player-2-options{
-	height: 104px;
-}*/
+.choice {
+	padding: 5px 3px 5px 3px;
+}
+
+.choice:hover {
+	cursor: pointer;
+	background-color: rgba(0,0,0,.125);
+}
+
+.rock {
+	margin-top: 20px;
+}
+
+#player-1-selection,
+#player-2-selection {
+	font-size: 42px;
+	position: absolute;
+	top: 35%;
+	text-align: center;
+	width: 100%;
+}
+
+#player-1-name, #player-2-name {
+	font-size: 24px;
+}
+
+#result {
+	font-size: 38px;
+	position: absolute;
+	top: 10%;
+	text-align: center;
+	width: 100%;
+}
+
+#chat {
+	margin-top: 50px;
+}
+
+.window {
+	height: 20vh;
+	overflow: hidden;
+	width: 100%;
+
+}
+
+#chat-window {
+	border: 1px solid rgba(0,0,0,.125);
+	position: relative;
+	overflow: auto;
+	height: 100%;
+}
+
+#chat-msg {
+	width: 80%;
+}
+
+#display-text {
+	font-weight: bold;
+}

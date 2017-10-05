@@ -33,27 +33,83 @@ var messages = database.ref("messages");
 // '.info/connected' is a boolean value, true if the client is connected and false if they are not.
 var connectedRef = database.ref(".info/connected");
 
+//calculate winner and update firebase
+function rpsWinner() {
+	totalPlayersRef.once("value", function(snapshot) {
+		//populate variables with info from database
+		var player1Choice = snapshot.child('1').child('choice').val();
+		var player2Choice = snapshot.child('2').child('choice').val();
+		var player1Name = snapshot.child('1').child('name').val();
+		var player2Name = snapshot.child('2').child('name').val();
+		console.log("p1Choice: " + player1Choice + " p2Choice: " +
+			player2Choice + " p1Name: " + player1Name + " p2Name: " + player2Name);
 
-$("#send-msg").on("click", function() {
-	event.preventDefault();
-	var message = $("#chat-msg").val();
-	if (message != "") {
-		messages.push({
-			name: rpsPlayer.name + ":",
-			message: message
-		});
+		//check choices have been selected
+		if (player1Choice != "" && player2Choice != "") {
+			//Check for a tie
+			if (player1Choice === player2Choice) {
+				$("#result").text("It's a tie!");
+			}
+
+			//Conditions for Player 1 to win
+			if (player1Choice === "Rock" && player2Choice === 'Scissors' ||
+				player1Choice === "Paper" && player2Choice === 'Rock' ||
+				player1Choice === "Scissors" && player2Choice === 'Paper') {
+				//Player 1 wins
+				$("#result").text(player1Name + " is the Winner!");
+				database.ref("/players/1/wins").set(snapshot.child('1').child('wins').val() + 1);
+				database.ref("/players/2/losses").set(snapshot.child('2').child('losses').val() + 1);
+			}
+
+			if (player1Choice === "Rock" && player2Choice === 'Paper' ||
+				player1Choice === "Paper" && player2Choice === 'Scissors' ||
+				player1Choice === "Scissors" && player2Choice === 'Rock') {
+				//Player 2 wins
+				$("#result").text(player2Name + " is the Winner!");
+				database.ref("/players/2/wins").set(snapshot.child('2').child('wins').val() + 1);
+				database.ref("/players/1/losses").set(snapshot.child('1').child('losses').val() + 1);
+			}
+
+			//display choices
+			$("#player-1-selection").text(player1Choice);
+			$("#player-2-selection").text(player2Choice);
+		}
+
+	});
+};
+
+function assignPlayer(num, name) {
+	//changes to html based on which player entered their name
+	$(".introductions").addClass("d-none");
+	$("#player-name").text(name);
+	$("#player-num").text(num);
+	$(".active-game").removeClass("d-none");
+	$("#player-" + num).addClass("current-player");
+	$("#player-" + num + "-name").text(name);
+
+};
+
+function setChoice(player, choice) {
+	//set choice to required player in database
+	if (player === 1) {
+		player1.child("choice").set(choice);
+		$("#player-1-selection").text(choice);
 	}
+	if (player === 2) {
+		player2.child("choice").set(choice);
+	}
+};
 
-	$("#chat-msg").val("");
-});
 
+
+//add messages to chat when data is enter to firebase
 messages.on('child_added', function(snapshot) {
 	//add message to chat window
 	$("#chat-window").append("<span>" + snapshot.val().name + " " + snapshot.val().message + "</span><br>");
 
 });
 
-
+//update the webpage when player data changes
 totalPlayersRef.on('value', function(snapshot) {
 
 	totalPlayersNum = snapshot.numChildren();
@@ -92,16 +148,19 @@ totalPlayersRef.on('value', function(snapshot) {
 		$("#player-1-name").text(updatedPlayer1.name);
 		$("#player-1-wins").text(updatedPlayer1.wins);
 		$("#player-1-losses").text(updatedPlayer1.losses);
-		$("#player-1-selection").text(updatedPlayer1.choice);
+		//$("#player-1-selection").text(updatedPlayer1.choice);
 		//set display for player 1
 		$("#player-2-name").text(updatedPlayer2.name);
 		$("#player-2-wins").text(updatedPlayer2.wins);
 		$("#player-2-losses").text(updatedPlayer2.losses);
-		$("#player-2-selection").text(updatedPlayer2.choice);
+		//$("#player-2-selection").text(updatedPlayer2.choice);
 	}
+
+
 
 });
 
+//set players up on their turn
 playerTurn.on("value", function(snapshot) {
 	//Check if player turn has a value
 	if (snapshot.exists()) {
@@ -129,12 +188,16 @@ playerTurn.on("value", function(snapshot) {
 				$("#display-text").text("Waiting for player 2 to choose.");
 				$("#player-1-options").addClass("d-none");
 				$("#player-1-selection").removeClass("d-none");
+				$("#player-2-selection").empty();
+
 			}
 			if (playerNumber == 2) {
 				$("#display-text").text("It's your turn!");
 				$("#player-2-options").removeClass("d-none");
 				$("#player-2-selection").addClass("d-none");
 			}
+			//clear results for both players
+			$("#result").empty();
 		}
 	}
 
@@ -143,7 +206,7 @@ playerTurn.on("value", function(snapshot) {
 
 //When the client's connection state changes...
 connectedRef.on("value", function(snapshot) {
-
+	console.log("Player# " + playerNumber);
 	// If they are connected..
 	if (snapshot.val()) {
 
@@ -152,73 +215,18 @@ connectedRef.on("value", function(snapshot) {
 
 		var num = playerNumber + "";
 
-		players.child('1').onDisconnect().remove();
-		players.child('2').onDisconnect().remove();
-		database.ref("/turn").onDisconnect().remove();
+		totalPlayersRef.child('1').onDisconnect().remove();
+		totalPlayersRef.child('2').onDisconnect().remove();
+
+		playerTurn.onDisconnect().remove();
+		messages.onDisconnect().remove();
+
+	} else {
+		console.log("not connected");
 	}
 });
 
-function rpsWinner() {
-	totalPlayersRef.once("value", function(snapshot) {
-		//populate variables with info from database
-		var player1Choice = snapshot.child('1').child('choice').val();
-		var player2Choice = snapshot.child('2').child('choice').val();
-		var player1Name = snapshot.child('1').child('name').val();
-		var player2Name = snapshot.child('2').child('name').val();
-		console.log("p1Choice: " + player1Choice + " p2Choice: " +
-			player2Choice + " p1Name: " + player1Name + " p2Name: " + player2Name);
-
-		//check choices have been selected
-		if (player1Choice != "" && player2Choice != "") {
-			//Check for a tie
-			if (player1Choice === player2Choice) {
-				$("#result").text("It's a tie!");
-			}
-
-			//Conditions for Player 1 to win
-			if (player1Choice === "Rock" && player2Choice === 'Scissors' ||
-				player1Choice === "Paper" && player2Choice === 'Rock' ||
-				player1Choice === "Scissors" && player2Choice === 'Paper') {
-				//Player 1 wins
-				$("#result").text(player1Name + " is the Winner!");
-				database.ref("/players/1/wins").set(snapshot.child('1').child('wins').val() + 1);
-				database.ref("/players/2/losses").set(snapshot.child('2').child('losses').val() + 1);
-			}
-
-			if (player1Choice === "Rock" && player2Choice === 'Paper' ||
-				player1Choice === "Paper" && player2Choice === 'Scissors' ||
-				player1Choice === "Scissors" && player2Choice === 'Rock') {
-				//Player 2 wins
-				$("#result").text(player2Name + " is the Winner!");
-				database.ref("/players/2/wins").set(snapshot.child('2').child('wins').val() + 1);
-				database.ref("/players/1/losses").set(snapshot.child('1').child('losses').val() + 1);
-			}
-		}
-
-	});
-};
-
-function assignPlayer(num, name) {
-	//changes to html based on which player entered their name
-	$(".introductions").addClass("d-none");
-	$("#player-name").text(name);
-	$("#player-num").text(num);
-	$(".active-game").removeClass("d-none");
-	$("#player-" + num).addClass("current-player");
-	$("#player-" + num + "-name").text(name);
-
-};
-
-function setChoice(player, choice) {
-	//set choice to required player in database
-	if (player === 1) {
-		player1.child("choice").set(choice);
-	}
-	if (player === 2) {
-		player2.child("choice").set(choice);
-	}
-}
-
+//add player to instance once the player's name is entered
 $("#start-game").on("click", function(event) {
 	event.preventDefault();
 	//get input value for player name
@@ -245,7 +253,21 @@ $("#start-game").on("click", function(event) {
 	}
 });
 
+//add messages to firebase
+$("#send-msg").on("click", function() {
+	event.preventDefault();
+	var message = $("#chat-msg").val();
+	if (message != "") {
+		messages.push({
+			name: rpsPlayer.name + ":",
+			message: message
+		});
+	}
 
+	$("#chat-msg").val("");
+});
+
+//add choice to firebase when it is seleceted by player
 $(".choice").on("click", function() {
 	//set choice
 	setChoice(playerNumber, $(this).text());
